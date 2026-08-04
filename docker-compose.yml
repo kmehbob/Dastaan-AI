@@ -1,0 +1,51 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    environment:
+      TRANSLATION_API_URL: http://api:8000
+      TRANSLATION_API_KEY: ${TRANSLATION_API_KEY:?Set TRANSLATION_API_KEY in .env}
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks: [private-ai]
+
+  api:
+    build:
+      context: ./backend
+    environment:
+      ENVIRONMENT: production
+      TRANSLATION_API_KEY: ${TRANSLATION_API_KEY:?Set TRANSLATION_API_KEY in .env}
+      TRANSLATION_PROVIDER: ${TRANSLATION_PROVIDER:-marian}
+      TRANSLATION_MODEL: ${TRANSLATION_MODEL:-Helsinki-NLP/opus-mt-ur-en}
+      SPEECH_MODEL: ${SPEECH_MODEL:-small}
+      SPEECH_DEVICE: ${SPEECH_DEVICE:-cpu}
+      SPEECH_COMPUTE_TYPE: ${SPEECH_COMPUTE_TYPE:-int8}
+      MAX_CHARACTERS: ${MAX_CHARACTERS:-5000}
+      MAX_AUDIO_BYTES: ${MAX_AUDIO_BYTES:-15728640}
+      RATE_LIMIT_REQUESTS: ${RATE_LIMIT_REQUESTS:-30}
+      RATE_LIMIT_WINDOW_SECONDS: ${RATE_LIMIT_WINDOW_SECONDS:-60}
+      REQUEST_TIMEOUT_SECONDS: ${REQUEST_TIMEOUT_SECONDS:-45}
+      REQUIRE_HTTPS: "false"
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+      TRUSTED_HOSTS: api,localhost,127.0.0.1
+      EXPOSE_API_DOCS: ${EXPOSE_API_DOCS:-false}
+      MODEL_CACHE_DIR: /models
+      HF_HOME: /models/huggingface
+    volumes:
+      - model-cache:/models
+    expose:
+      - "8000"
+    restart: unless-stopped
+    networks: [private-ai]
+
+networks:
+  private-ai:
+    driver: bridge
+
+volumes:
+  model-cache:

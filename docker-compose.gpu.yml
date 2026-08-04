@@ -1,0 +1,48 @@
+services:
+  api:
+    environment:
+      TRANSLATION_PROVIDER: vllm
+      TRANSLATION_MODEL: ${VLLM_MODEL:-Qwen/Qwen2.5-7B-Instruct}
+      INFERENCE_BASE_URL: http://model:8000
+      INFERENCE_API_KEY: ${INFERENCE_API_KEY:-local-private-model}
+      SPEECH_DEVICE: cuda
+      SPEECH_COMPUTE_TYPE: float16
+      ALLOW_PUBLIC_INFERENCE_URL: "false"
+    depends_on:
+      model:
+        condition: service_healthy
+  model:
+    image: ${VLLM_IMAGE:-vllm/vllm-openai:latest}
+    command:
+      - --model
+      - ${VLLM_MODEL:-Qwen/Qwen2.5-7B-Instruct}
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --api-key
+      - ${INFERENCE_API_KEY:-local-private-model}
+      - --max-model-len
+      - "8192"
+    environment:
+      HF_HOME: /models/huggingface
+    volumes:
+      - model-cache:/models
+    expose:
+      - "8000"
+    ipc: host
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 180s
+      retries: 10
+    restart: unless-stopped
+    networks: [private-ai]

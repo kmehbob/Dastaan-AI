@@ -1,0 +1,12 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <rect width="64" height="64" rx="12" fill="#24101c"/>
+  <g fill="none" stroke="#d7ac5c" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 11v42"/>
+    <path d="M55 11v42"/>
+    <path d="M32 20c-4.6-4-10.5-6.1-16.8-6.1V45c6.3 0 12.2 2.1 16.8 6.1"/>
+    <path d="M32 20c4.6-4 10.5-6.1 16.8-6.1V45c-6.3 0-12.2 2.1-16.8 6.1"/>
+    <path d="M32 20v31"/>
+    <path d="M27 55l5 5 5-5" stroke-width="1.8"/>
+  </g>
+  <text x="32" y="39" text-anchor="middle" font-family="Georgia, 'Playfair Display', serif" font-size="20" font-weight="700" fill="#d7ac5c">D</text>
+</svg>

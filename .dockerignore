@@ -1,0 +1,12 @@
+.git
+.next
+dist
+node_modules
+.sites-runtime
+.wrangler
+backend/.venv
+backend/.pytest_cache
+**/__pycache__
+model-cache
+certs
+*.log
