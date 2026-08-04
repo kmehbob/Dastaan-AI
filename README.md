@@ -4,6 +4,8 @@
 
 A complete private Urdu assistant that keeps the existing speech-to-Urdu workflow and adds one-tap, natural Urdu-to-English translation.
 
+<img width="1913" height="862" alt="Current" src="https://github.com/user-attachments/assets/193099ce-fa6d-4876-8fae-86128b07937d" />
+
 ## Included features
 
 - Type Urdu directly or record Urdu speech and convert it to Urdu text.
